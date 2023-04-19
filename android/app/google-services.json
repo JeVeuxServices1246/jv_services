@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1014363589917",
+    "project_id": "jv-services-e1766",
+    "storage_bucket": "jv-services-e1766.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014363589917:android:f69ef576c180ee2336a5f4",
+        "android_client_info": {
+          "package_name": "com.userjv.servicess"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014363589917-b33unugkv2sf82lh7g3mt694drkmgjsg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjB7Sf-DNvBJWdUucRnA9Hv13kCQpLRXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014363589917-b33unugkv2sf82lh7g3mt694drkmgjsg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
