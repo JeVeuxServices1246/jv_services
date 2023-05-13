@@ -8,4 +8,5 @@ class AppRouteConstants {
   static const RouteInfo loginRouteInfo = RouteInfo('Login', '/login');
   static const RouteInfo registerRouteInfo = RouteInfo('Register', '/register');
   static const RouteInfo welcomeRouteInfo = RouteInfo('Welcome', '/welcome');
+  static const RouteInfo demoRouteInfo = RouteInfo('Demo', '/demo');
 }

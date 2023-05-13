@@ -4,6 +4,7 @@ import 'package:jv_services/features/data/data_source/router/cubit/routing_cubit
 import 'package:jv_services/features/data/data_source/router/router_listener.dart';
 import 'package:jv_services/features/domain/repository/shared_pref/shared_pref_repo.dart';
 import 'package:jv_services/features/presentation/dashboard/ui/dashboard_screen.dart';
+import 'package:jv_services/features/presentation/demo_screen.dart';
 import 'package:jv_services/features/presentation/login/ui/login_screen.dart';
 import 'package:jv_services/features/presentation/onBoarding/ui/on_boarding_screen.dart';
 import 'package:jv_services/features/presentation/splash/ui/splash_screen.dart';
@@ -56,30 +57,47 @@ class GoRouterProvider {
             name: AppRouteConstants.welcomeRouteInfo.name,
             pageBuilder: (context, state) {
               return const MaterialPage(child: WelcomeScreen());
+            }),
+        GoRoute(
+            path: AppRouteConstants.demoRouteInfo.path,
+            name: AppRouteConstants.demoRouteInfo.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: DemoScreen());
             })
       ],
-      redirect: (context, state) {
-        final RoutingState newState = routingCubit.state;
-        print(newState.toString());
-        if (newState is RoutingSplash) {
+      redirect: (context, GoRouterState state) {
+        final RoutingState routingState = routingCubit.state;
+        print(state.location);
+
+        final loggedIn = routingState is RoutingDashboard;
+        final welcome = routingState is RoutingWelcome;
+        final isLogging =
+            state.location == AppRouteConstants.loginRouteInfo.path;
+
+        if (routingState is RoutingSplash) {
           return AppRouteConstants.splashRouteInfo.path;
         }
-        if (newState is RoutingOnBoard) {
+        if (routingState is RoutingOnBoard) {
           return AppRouteConstants.onBoardingRouteInfo.path;
         }
-        if (newState is RoutingWelcome) {
+        if (welcome) {
+          if (isLogging) {
+            return AppRouteConstants.loginRouteInfo.path;
+          }
           return AppRouteConstants.welcomeRouteInfo.path;
         }
-        if (newState is RoutingLogin) {
-          return AppRouteConstants.loginRouteInfo.path;
+        if (isLogging) {
+          return AppRouteConstants.dashboardRouteInfo.path;
         }
-        if (newState is RoutingDashboard) {
+        if (loggedIn && state.location == '/splash') {
           return AppRouteConstants.dashboardRouteInfo.path;
         }
         return null;
       },
       refreshListenable: routingListner);
-
+  // if (routingState is RoutingLogin) {
+  //   return AppRouteConstants.loginRouteInfo.path;
+  // }
   // GoRouter goRouter() {
   //   return GoRouter(
   //       routes: [

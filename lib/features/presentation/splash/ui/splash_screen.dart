@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void goto(BuildContext context) async {
     final cub = context.read<RoutingCubit>();
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     print("goto");
     cub.gotoNext();
   }
