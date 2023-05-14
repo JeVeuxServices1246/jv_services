@@ -7,6 +7,7 @@ import 'package:jv_services/features/presentation/dashboard/ui/dashboard_screen.
 import 'package:jv_services/features/presentation/demo_screen.dart';
 import 'package:jv_services/features/presentation/login/ui/login_screen.dart';
 import 'package:jv_services/features/presentation/onBoarding/ui/on_boarding_screen.dart';
+import 'package:jv_services/features/presentation/register/ui/register_screen.dart';
 import 'package:jv_services/features/presentation/splash/ui/splash_screen.dart';
 import 'package:jv_services/features/presentation/welcome/ui/welcome_screen.dart';
 
@@ -25,8 +26,10 @@ class GoRouterProvider {
     required this.prefRepo,
   });
 
-  late final GoRouter router = GoRouter(
-      // debugLogDiagnostics: true,
+  GoRouter get router => _router;
+
+  late final GoRouter _router = GoRouter(
+      debugLogDiagnostics: true,
       routes: [
         GoRoute(
             path: AppRouteConstants.dashboardRouteInfo.path,
@@ -47,23 +50,31 @@ class GoRouterProvider {
               return const MaterialPage(child: OnBoardingScreen());
             }),
         GoRoute(
-            path: AppRouteConstants.loginRouteInfo.path,
-            name: AppRouteConstants.loginRouteInfo.name,
-            pageBuilder: (context, state) {
-              return const MaterialPage(child: LoginScreen());
-            }),
-        GoRoute(
             path: AppRouteConstants.welcomeRouteInfo.path,
             name: AppRouteConstants.welcomeRouteInfo.name,
-            pageBuilder: (context, state) {
-              return const MaterialPage(child: WelcomeScreen());
-            }),
+            builder: (context, state) {
+              return const WelcomeScreen();
+            },
+            routes: [
+              GoRoute(
+                  path: AppRouteConstants.loginRouteInfo.path,
+                  name: AppRouteConstants.loginRouteInfo.name,
+                  pageBuilder: (context, state) {
+                    return const MaterialPage(child: LoginScreen());
+                  }),
+              GoRoute(
+                  path: AppRouteConstants.registerRouteInfo.path,
+                  name: AppRouteConstants.registerRouteInfo.name,
+                  builder: (context, state) {
+                    return const RegisterScreen();
+                  }),
+            ]),
         GoRoute(
             path: AppRouteConstants.demoRouteInfo.path,
             name: AppRouteConstants.demoRouteInfo.name,
             pageBuilder: (context, state) {
               return const MaterialPage(child: DemoScreen());
-            })
+            }),
       ],
       redirect: (context, GoRouterState state) {
         final RoutingState routingState = routingCubit.state;
@@ -71,30 +82,46 @@ class GoRouterProvider {
 
         final loggedIn = routingState is RoutingDashboard;
         final welcome = routingState is RoutingWelcome;
-        final isLogging =
-            state.location == AppRouteConstants.loginRouteInfo.path;
+        final isSplash = routingState is RoutingSplash;
+        final isOnBoard = routingState is RoutingOnBoard;
+        final isLoginPath =
+            state.location == AppRouteConstants.loginRouteInfo.fullPath;
+        // "${AppRouteConstants.welcomeRouteInfo.path}/${AppRouteConstants.loginRouteInfo.path}";
+        final isSplashPath =
+            state.location == AppRouteConstants.splashRouteInfo.path;
+        final isOnBoardPath =
+            state.location == AppRouteConstants.onBoardingRouteInfo.path;
+        final isDashboardPath =
+            state.location == AppRouteConstants.dashboardRouteInfo.path;
+        final isRegisterPath =
+            state.location == AppRouteConstants.registerRouteInfo.fullPath;
+        // "${AppRouteConstants.welcomeRouteInfo.path}/${AppRouteConstants.registerRouteInfo.path}";
 
-        if (routingState is RoutingSplash) {
+        if (isSplash) {
           return AppRouteConstants.splashRouteInfo.path;
         }
-        if (routingState is RoutingOnBoard) {
+        if (isOnBoard) {
           return AppRouteConstants.onBoardingRouteInfo.path;
         }
         if (welcome) {
-          if (isLogging) {
-            return AppRouteConstants.loginRouteInfo.path;
+          if (isRegisterPath || isLoginPath) {
+            return null;
           }
           return AppRouteConstants.welcomeRouteInfo.path;
         }
-        if (isLogging) {
-          return AppRouteConstants.dashboardRouteInfo.path;
-        }
-        if (loggedIn && state.location == '/splash') {
-          return AppRouteConstants.dashboardRouteInfo.path;
+        if (loggedIn) {
+          if (isSplashPath || isLoginPath) {
+            return AppRouteConstants.dashboardRouteInfo.path;
+          }
         }
         return null;
       },
       refreshListenable: routingListner);
+}
+
+  // if (isLogging) {
+  //   return AppRouteConstants.dashboardRouteInfo.path;
+  // }
   // if (routingState is RoutingLogin) {
   //   return AppRouteConstants.loginRouteInfo.path;
   // }
@@ -154,7 +181,6 @@ class GoRouterProvider {
   //       },
   //       refreshListenable: RouterRefreshStream(stream: routingCubit.stream));
   // }
-}
 
 
 

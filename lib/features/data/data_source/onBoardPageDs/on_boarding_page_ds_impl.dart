@@ -4,7 +4,7 @@ import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/strings.dart';
 import 'on_boarding_page_ds.dart';
 
-class OnBoardingPageDSImpl extends OnBoardingPageDS {
+class OnBoardingPageDSImpl implements OnBoardingPageDS {
   @override
   List<OnBoardPage> getpages() {
     return [

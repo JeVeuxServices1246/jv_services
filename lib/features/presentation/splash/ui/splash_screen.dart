@@ -14,8 +14,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    print("splac");
     goto(context);
+  }
+
+  @override
+  void dispose() {
+    print("dispose splash");
+    super.dispose();
   }
 
   @override
@@ -23,47 +28,48 @@ class _SplashScreenState extends State<SplashScreen> {
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-        // backgroundColor: context.theme.primary,
-        body: Stack(
-      children: [
-        Row(
-          children: [
-            Flexible(
-              child: SizedBox(
-                  width: deviceWidth * 1,
-                  height: deviceHeight * 1,
-                  child: Image.asset(
-                    AppAssets.splashWhiteBackground,
-                    fit: BoxFit.fill,
-                  )),
-            ),
-            Flexible(
-              child: SizedBox(
-                  width: deviceWidth * 1,
-                  height: deviceHeight * 1,
-                  child: Image.asset(
-                    AppAssets.splashBlackBackground,
-                    fit: BoxFit.fill,
-                  )),
-            )
-          ],
-        ),
-        Center(
-          child: Image.asset(
-            AppAssets.splashLogo,
-            height: deviceHeight / 2,
-            width: deviceWidth / 1.5,
+    return SafeArea(
+      child: Scaffold(
+          // backgroundColor: context.theme.primary,
+          body: Stack(
+        children: [
+          Row(
+            children: [
+              Flexible(
+                child: SizedBox(
+                    width: deviceWidth * 1,
+                    height: deviceHeight * 1,
+                    child: Image.asset(
+                      AppAssets.splashWhiteBackground,
+                      fit: BoxFit.fill,
+                    )),
+              ),
+              Flexible(
+                child: SizedBox(
+                    width: deviceWidth * 1,
+                    height: deviceHeight * 1,
+                    child: Image.asset(
+                      AppAssets.splashBlackBackground,
+                      fit: BoxFit.fill,
+                    )),
+              )
+            ],
           ),
-        ),
-      ],
-    ));
+          Center(
+            child: Image.asset(
+              AppAssets.splashLogo,
+              height: deviceHeight / 2,
+              width: deviceWidth / 1.5,
+            ),
+          ),
+        ],
+      )),
+    );
   }
 
   void goto(BuildContext context) async {
     final cub = context.read<RoutingCubit>();
     await Future.delayed(const Duration(seconds: 1));
-    print("goto");
     cub.gotoNext();
   }
 }

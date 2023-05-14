@@ -33,3 +33,8 @@ class RoutingDashboard extends RoutingState {
   @override
   List<Object> get props => [];
 }
+
+class RoutingLogout extends RoutingState {
+  @override
+  List<Object> get props => [];
+}

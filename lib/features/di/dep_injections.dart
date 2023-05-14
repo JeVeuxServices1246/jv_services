@@ -11,6 +11,7 @@ import 'package:jv_services/features/data/repository/shared_pref/shared_pref_rep
 import 'package:jv_services/features/domain/repository/on_boarding_page/on_boarding_page_repo.dart';
 import 'package:jv_services/features/domain/repository/shared_pref/shared_pref_repo.dart';
 import 'package:jv_services/features/presentation/onBoarding/cubit/on_board_cubit.dart';
+import 'package:jv_services/features/presentation/register/bloc/register_bloc.dart';
 import 'package:jv_services/features/presentation/splash/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +24,7 @@ Future<void> injectDeps() async {
   gi.registerFactory(() => OnBoardCubit(onBoardingPageRepo: gi.call()));
   gi.registerFactory(() => SplashCubit());
   gi.registerLazySingleton(() => RoutingCubit(sharedPrefRepo: gi.call()));
+  gi.registerFactory(() => RegisterBloc());
 
   // repository
   gi.registerFactory<OnBoardingPageRepo>(

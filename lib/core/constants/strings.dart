@@ -10,10 +10,13 @@ class AppStrings {
   static const String userButton = "JV User";
 
   // Welcome onBoardingScreen
-  static const String onBoardingTitleOne = "JeVeux Home services";
-  static const String onBoardingTitleTwo =
+  static const String onBoardingTitleOne = "Beauty parlour at your home";
+  static const String onBoardingTitleTwo = "Plumber & expart nearby you";
+  static const String onBoardingTitleThree = "Professional home cleaning";
+  static const String onBoardingDescOne = "JeVeux Home services";
+  static const String onBoardingDescTwo =
       "Book reliable & high quality services delivered\n by trained professionals conveniently \nat home";
-  static const String onBoardingTitleThree =
+  static const String onBoardingDescThree =
       "Our services include beauty treatments,\n massages, haircuts, home cleaning,handymen,\n appliance repair, painting, pest control,\n landscaping and ";
   static const String onBoardingTitleFour =
       "Not pleased with our services or if you did not\nhave a good experience you will be refunded\n for unsatisfied portion";
@@ -150,6 +153,7 @@ class AppStrings {
   static const String panTermsCondition =
       'I hereby consent to receiving communications from JEveux for any relevant opportunities';
 }
+
 const strErrorEmptyProfession = "Enter Profession";
 const strInvalidProfession = "Enter Valid Profession";
 const strErrorEmptyLocation = "Enter Location";
@@ -182,39 +186,42 @@ const strInvalidSkinColor = "Not valid";
 const strErrorEmptyEyeColor = "Enter eye color";
 const strInvalidEyeColor = "Not valid";
 
-
 const strErrorEmptyEmail = "Enter email";
 const strInvalidEmail = "Enter valid email";
-const strInvalidDob= "Enter valid Dob";
+const strInvalidDob = "Enter valid Dob";
 const strErrorEmptyDob = "Enter Dob";
-const strErrorEmptyCarModel="Enter car model";
-const strInvalidCarModel= "Enter a valid car model";
-const strErrorEmptyInsuranceCompany="Enter insurance company";
-const strInvalidInsuranceCompany="Entert a valid insurance company";
+const strErrorEmptyCarModel = "Enter car model";
+const strInvalidCarModel = "Enter a valid car model";
+const strErrorEmptyInsuranceCompany = "Enter insurance company";
+const strInvalidInsuranceCompany = "Entert a valid insurance company";
 const strErrorEmptyPolicyNumber = "Enter policy number";
 const strInvalidPolicyNumber = "Enter valid policy number";
-const strErrorEmptyDetails="Enter details";
-const strInvalidDetails="Enter valid details";
-const strErrorEmptyChildCareExperience="Enter number of years of child care experience";
-const  strInvalidChildCareExperience="Enter valid years of child care experience";
-const strErrorEmptyHighestEducationAchieved = "Enter highest education achieved";
-const strInvalidEmptyHighestEducationAchieved="Enter highest education achieved";
-const strErrorEmptyStudy="Enter Major/Minor Study";
-const strInvalidStudy="Enter Major/Minor Study";
-const strErrorEmptyActivitiesAndInterest="Enter Activities and interest";
-const strInvalidActivitiesAndInterest="Enter Activities and interest";
-const strErrorEmptyFiveWordDescription="Enter five words which describes you";
-const strInvalidFiveWordDescription="Enter five words which describes you";
-const strErrorEmptyUserName= "Enter username";
-const strErrorInvalidUserName="minimum 6 characters required";
-const strEmptyPassword= "Enter Password";
-const strErrorInvalidPassword= "Enter valid Password";
+const strErrorEmptyDetails = "Enter details";
+const strInvalidDetails = "Enter valid details";
+const strErrorEmptyChildCareExperience =
+    "Enter number of years of child care experience";
+const strInvalidChildCareExperience =
+    "Enter valid years of child care experience";
+const strErrorEmptyHighestEducationAchieved =
+    "Enter highest education achieved";
+const strInvalidEmptyHighestEducationAchieved =
+    "Enter highest education achieved";
+const strErrorEmptyStudy = "Enter Major/Minor Study";
+const strInvalidStudy = "Enter Major/Minor Study";
+const strErrorEmptyActivitiesAndInterest = "Enter Activities and interest";
+const strInvalidActivitiesAndInterest = "Enter Activities and interest";
+const strErrorEmptyFiveWordDescription = "Enter five words which describes you";
+const strInvalidFiveWordDescription = "Enter five words which describes you";
+const strErrorEmptyUserName = "Enter username";
+const strErrorInvalidUserName = "minimum 6 characters required";
+const strEmptyPassword = "Enter Password";
+const strErrorInvalidPassword = "Enter valid Password";
 const strErrorEmptyLicense = "Enter license number";
 const strInvalidLicense = "Enter valid license number";
 const strEmptyValidYears = "Enter No. of years ";
 const strInvalidYears = "Enter valid no. of years";
 const strInvalidYear = "Enter valid year";
-const strErrorEmptyCarMake= "Enter car make";
+const strErrorEmptyCarMake = "Enter car make";
 const strInvalidCarMake = "Enter a valid car make";
 const strErrorEmptyYear = "Enter year";
 const strErrorEmptyToll = "Enter toll fees";

@@ -10,7 +10,7 @@ class RoutingCubit extends Cubit<RoutingState> {
 
   void gotoNext() {
     bool visited = sharedPrefRepo.isOnBoarded();
-    bool isLoggedin = true;
+    bool isLoggedin = false;
     // ignore: dead_code
     if (isLoggedin) {
       emit(RoutingDashboard());
@@ -24,11 +24,19 @@ class RoutingCubit extends Cubit<RoutingState> {
     emit(RoutingOnBoard());
   }
 
+  void login() {
+    emit(RoutingDashboard());
+  }
+
   Future<void> setOnBoardVisited() async {
     bool visited = await sharedPrefRepo.setOnBoarded();
     if (!visited) {
       return;
     }
     gotoNext();
+  }
+
+  void logout() {
+    emit(RoutingWelcome());
   }
 }
