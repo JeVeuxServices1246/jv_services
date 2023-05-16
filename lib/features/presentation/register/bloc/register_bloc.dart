@@ -5,7 +5,7 @@ part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc() : super(RegisterState()) {
+  RegisterBloc() : super(const RegisterState()) {
     print("Register Bloc called");
     on<FirstNameChanged>(_firstnameEvent);
     on<LastNameChanged>(_lastnameEvent);

@@ -1,27 +1,30 @@
 part of 'register_bloc.dart';
 
-class RegisterState {
-  String firstname;
-  String? firstnameError;
-  String lastname;
-  String? lastnameError;
-  String phone;
-  String? phoneError;
-  String email;
-  String? emailError;
+class RegisterState extends Equatable {
+  final String firstname;
+  final String? firstnameError;
 
-  String password;
-  String? passwordError;
-  bool pwdVisible;
+  final String lastname;
+  final String? lastnameError;
 
-  String confirmPassword;
-  String? confirmPasswordError;
+  final String phone;
+  final String? phoneError;
 
-  bool confirmPwdVisible;
-  String countryCode;
-  String? countryCodeError;
+  final String email;
+  final String? emailError;
 
-  RegisterState(
+  final String password;
+  final String? passwordError;
+  final bool pwdVisible;
+
+  final String confirmPassword;
+  final String? confirmPasswordError;
+  final bool confirmPwdVisible;
+
+  final String countryCode;
+  final String? countryCodeError;
+
+  const RegisterState(
       {this.firstname = "",
       this.lastname = "",
       this.phone = "",
@@ -75,6 +78,17 @@ class RegisterState {
         confirmPasswordError: confirmPasswordError ?? this.confirmPasswordError,
         phoneError: phoneError ?? this.phoneError);
   }
+
+  @override
+  List<Object> get props => [
+        lastname,
+        firstname,
+        email,
+        password,
+        phone,
+        confirmPassword,
+        countryCode
+      ];
 }
 
 // abstract class RegisterState extends Equatable {

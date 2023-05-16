@@ -223,6 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _firstNameBloc() {
     return BlocBuilder<RegisterBloc, RegisterState>(builder: (context, state) {
       return customTextField(
+        validator: (lastname) {},
         textHint: 'First Name',
         isPassword: false,
         onChange: (value) {
