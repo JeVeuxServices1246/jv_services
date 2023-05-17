@@ -4,6 +4,15 @@ abstract class RegisterEvent extends Equatable {
   const RegisterEvent();
 }
 
+class LoadCountries extends RegisterEvent {
+  final List<Country> countries;
+
+  const LoadCountries(this.countries);
+
+  @override
+  List<Object> get props => [countries];
+}
+
 class FirstNameChanged extends RegisterEvent {
   final String firstname;
 

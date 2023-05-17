@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jv_services/core/colors.dart';
 import 'package:jv_services/core/constants/app_assets.dart';
 import 'package:jv_services/core/constants/strings.dart';
+import 'package:jv_services/features/data/data_source/router/app_route_constants.dart';
+import 'package:jv_services/features/presentation/common/countries/countries_widget.dart';
 import 'package:jv_services/features/presentation/register/bloc/register_bloc.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -16,6 +18,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final RegExp phoneNumberRegex = RegExp(
+      r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$');
+  final RegExp emailRegex = RegExp(
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+  final RegExp passwordRegex =
+      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+  final RegExp nameRegExp = RegExp(r'^[a-z A-Z]+$');
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -77,27 +86,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   flex: 8,
                   child: Container(
                     padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 25),
+                        const EdgeInsets.only(left: 15, right: 15, bottom: 25),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Container(
-                        height: deviceHeight - 150,
-                        width: deviceWidth,
+                        // height: deviceHeight - 150,
+                        // width: deviceWidth,
                         decoration: const BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(40),
-                                bottomRight: Radius.circular(40),
-                                topRight: Radius.circular(40),
-                                topLeft: Radius.circular(40))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40))),
                         child: Container(
-                          padding: const EdgeInsets.only(
-                            top: 40,
-                            left: 20,
-                            right: 20,
-                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 30, horizontal: 15),
                           child: SingleChildScrollView(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,8 +115,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           textAlign: TextAlign.start,
                                           style: GoogleFonts.roboto(
                                             textStyle: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 19,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 22,
                                               color: Colors.black,
                                             ),
                                           )),
@@ -125,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         children: [
                                           Expanded(child: _firstNameBloc()),
                                           const SizedBox(
-                                            width: 20,
+                                            width: 12,
                                           ),
                                           Expanded(child: _lastnameBloc())
                                         ],
@@ -134,6 +137,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         height: 10,
                                       ),
                                       _emailBloc(),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      _phoneBloc(),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -191,9 +198,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // if (viewModel.upKey.currentState!.validate()) {
-                                    //   viewModel.registerUser();
-                                    // }
+                                    if (_formKey.currentState!.validate()) {
+                                      BlocProvider.of<RegisterBloc>(context)
+                                          .add(Register());
+                                      // context.push(AppRouteConstants
+                                      //     .registerOTPRouteInfo.fullPath);
+                                    }
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return const CountriesDialogWidget();
+                                        });
                                   },
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
@@ -223,33 +238,80 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _firstNameBloc() {
     return BlocBuilder<RegisterBloc, RegisterState>(builder: (context, state) {
       return customTextField(
-        validator: (lastname) {},
-        textHint: 'First Name',
-        isPassword: false,
-        onChange: (value) {
-          BlocProvider.of<RegisterBloc>(context).add(FirstNameChanged(value));
-        },
-        keyboardType: TextInputType.name,
-        formatter: [
-          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-        ],
-      );
+          textCapitalization: TextCapitalization.words,
+          validator: (firstname) {
+            if (firstname == null || firstname.isEmpty) {
+              return "Enter first name";
+            }
+            if (firstname.length < 3) {
+              return "Enter atleast 3 characters";
+            }
+            if (!nameRegExp.hasMatch(firstname)) {
+              return "Special chars and number are not allowed!";
+            }
+            return null;
+          },
+          textHint: 'First Name',
+          isPassword: false,
+          onChange: (value) {
+            BlocProvider.of<RegisterBloc>(context).add(FirstNameChanged(value));
+          },
+          keyboardType: TextInputType.text,
+          // formatter: [
+          //   FilteringTextInputFormatter.allow(RegExp(r'^[a-z A-Z]+$')),
+          // ],
+          errorMsg: null);
     });
   }
 
   Widget _lastnameBloc() {
     return BlocBuilder<RegisterBloc, RegisterState>(builder: (context, state) {
       return customTextField(
-        textHint: 'Last Name',
-        isPassword: false,
-        onChange: (value) {
-          BlocProvider.of<RegisterBloc>(context).add(LastNameChanged(value));
-        },
-        keyboardType: TextInputType.name,
-        formatter: [
-          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-        ],
-      );
+          textCapitalization: TextCapitalization.words,
+          validator: (lastName) {
+            if (lastName == null || lastName.isEmpty) {
+              return "Enter last name";
+            }
+            if (lastName.length < 3) {
+              return "Enter atleast 3 characters";
+            }
+            if (!nameRegExp.hasMatch(lastName)) {
+              return "Special chars and numbers are not allowed!";
+            }
+            return null;
+          },
+          textHint: 'Last Name',
+          isPassword: false,
+          onChange: (value) {
+            BlocProvider.of<RegisterBloc>(context).add(LastNameChanged(value));
+          },
+          keyboardType: TextInputType.text,
+          // formatter: [
+          //   FilteringTextInputFormatter.allow(RegExp(r'^[a-z A-Z]+$')),
+          // ],
+          errorMsg: null);
+    });
+  }
+
+  Widget _phoneBloc() {
+    return BlocBuilder<RegisterBloc, RegisterState>(builder: (context, state) {
+      return customTextField(
+          textHint: "Phone",
+          validator: (phone) {
+            if (phone == null) {
+              return "phone should not be blank";
+            }
+            if (!phoneNumberRegex.hasMatch(phone)) {
+              return "Please Enter a Valid Phone Number";
+            }
+            return null;
+          },
+          isPassword: false,
+          onChange: (value) {
+            BlocProvider.of<RegisterBloc>(context).add(PhoneChanged(value));
+          },
+          keyboardType: TextInputType.phone,
+          errorMsg: null);
     });
   }
 
@@ -258,10 +320,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return customTextField(
           textHint: "Email",
           isPassword: false,
+          validator: (email) {
+            if (email == null || email.isEmpty) {
+              return "Email should not be blank";
+            }
+            if (!emailRegex.hasMatch(email)) {
+              return "Enter valid email address";
+            }
+            return null;
+          },
           onChange: (value) {
             BlocProvider.of<RegisterBloc>(context).add(EmailChanged(value));
           },
-          keyboardType: TextInputType.emailAddress);
+          keyboardType: TextInputType.emailAddress,
+          errorMsg: null);
     });
   }
 
@@ -270,6 +342,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return customTextField(
           textHint: "Password",
           isPassword: true,
+          validator: (password) {
+            if (password == null || password.length < 8) {
+              return "Password minimum contains 8 char";
+            }
+            return null;
+          },
           onChange: (value) {
             BlocProvider.of<RegisterBloc>(context).add(PasswordChanged(value));
           },
@@ -278,18 +356,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
           visible: () {
             BlocProvider.of<RegisterBloc>(context)
                 .add(PasswordVisibled(!state.pwdVisible));
-          });
+          },
+          errorMsg: null);
     });
   }
 
   Widget _confirmPasswordBloc() {
     return BlocBuilder<RegisterBloc, RegisterState>(builder: (context, state) {
       return customTextField(
-          validator: (value) {
-            return null;
-          },
           textHint: "Confirm Password",
           isPassword: true,
+          validator: (password) {
+            if (password == null || password.length < 8) {
+              return "Password minimum contains 8 char";
+            }
+            if (state.password != password) {
+              return "Confirm Password does not match with password";
+            }
+            return null;
+          },
           onChange: (value) {
             BlocProvider.of<RegisterBloc>(context)
                 .add(ConfirmPasswordChanged(value));
@@ -298,9 +383,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           keyboardType: TextInputType.visiblePassword,
           pwdVisible: state.confirmPwdVisible,
           visible: () {
+            final isVisible = state.confirmPwdVisible ? false : true;
             BlocProvider.of<RegisterBloc>(context)
                 .add(ConfirmPasswordVisibled(!state.confirmPwdVisible));
-          });
+          },
+          errorMsg: null);
     });
   }
 
@@ -313,24 +400,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Function()? visible,
       bool pwdVisible = false,
       textInputAction: TextInputAction.next,
-      String? Function(String?)? validator}) {
-    return TextFormField(
-        validator: validator,
-        onChanged: onChange,
-        obscureText: isPassword ? pwdVisible : false,
-        inputFormatters: formatter ?? const [],
-        textInputAction: textInputAction,
-        decoration: InputDecoration(
-            hintText: textHint,
-            suffixIcon: isPassword
-                ? IconButton(
-                    onPressed: visible,
-                    icon: Icon(
-                        pwdVisible
-                            ? Icons.remove_red_eye_outlined
-                            : Icons.visibility_off_outlined,
-                        color: AppColors.blackColor))
-                : null));
+      String? Function(String?)? validator,
+      String? errorMsg,
+      TextCapitalization textCapitalization = TextCapitalization.none}) {
+    return Column(
+      children: [
+        TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autocorrect: false,
+            textCapitalization: textCapitalization,
+            validator: validator,
+            onChanged: onChange,
+            obscureText: isPassword ? pwdVisible : false,
+            inputFormatters: formatter ?? const [],
+            textInputAction: textInputAction,
+            decoration: InputDecoration(
+                hintText: textHint,
+                suffixIcon: isPassword
+                    ? IconButton(
+                        onPressed: visible,
+                        icon: Icon(
+                            pwdVisible
+                                ? Icons.remove_red_eye_outlined
+                                : Icons.visibility_off_outlined,
+                            color: AppColors.blackColor))
+                    : null)),
+        if (errorMsg != null) ...[
+          const SizedBox(height: 5),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Text(
+              errorMsg,
+              maxLines: 2,
+              style: const TextStyle(color: Colors.red, fontSize: 12.0),
+            ),
+          ),
+        ]
+      ],
+    );
   }
 }
 

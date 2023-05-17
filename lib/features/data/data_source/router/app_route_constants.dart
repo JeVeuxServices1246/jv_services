@@ -13,6 +13,10 @@ class AppRouteConstants {
       RouteInfo('Demo', '/demo', true, '/demo');
   static const RouteInfo loginRouteInfo =
       RouteInfo('Login', 'login', false, '/welcome/login');
+  static const RouteInfo loginOTPRouteInfo =
+      RouteInfo('OTP Sent', 'otp', false, '/welcome/login/otp');
   static const RouteInfo registerRouteInfo =
       RouteInfo('Register', 'register', false, '/welcome/register');
+  static const RouteInfo registerOTPRouteInfo =
+      RouteInfo('OTP Sent', 'otp', false, '/welcome/register/otp');
 }

@@ -43,6 +43,7 @@ class RegisterState extends Equatable {
       this.confirmPasswordError});
 
   RegisterState copy({
+    List<Country>? countries,
     String? firstname,
     String? lastname,
     String? phone,
@@ -61,22 +62,28 @@ class RegisterState extends Equatable {
     String? countryCodeError,
   }) {
     return RegisterState(
-        confirmPassword: confirmPassword ?? this.confirmPassword,
-        firstname: firstname ?? this.firstname,
-        lastname: lastname ?? this.lastname,
-        phone: phone ?? this.phone,
-        email: email ?? this.email,
-        password: password ?? this.password,
-        countryCode: countryCode ?? this.countryCode,
-        confirmPwdVisible: confirmPwdVisible ?? this.confirmPwdVisible,
-        pwdVisible: pwdVisible ?? this.pwdVisible,
-        firstnameError: firstNameError ?? firstnameError,
-        lastnameError: lastnameError ?? this.lastnameError,
-        emailError: emailError ?? this.emailError,
-        passwordError: passwordError ?? this.passwordError,
-        countryCodeError: confirmPassword ?? this.countryCodeError,
-        confirmPasswordError: confirmPasswordError ?? this.confirmPasswordError,
-        phoneError: phoneError ?? this.phoneError);
+      firstname: firstname ?? this.firstname,
+      firstnameError:
+          firstNameError ?? (firstname == null ? firstnameError : null),
+      lastname: lastname ?? this.lastname,
+      lastnameError:
+          lastnameError ?? (lastname == null ? this.lastnameError : null),
+      phone: phone ?? this.phone,
+      phoneError: phoneError ?? (phone == null ? this.phoneError : null),
+      email: email ?? this.email,
+      emailError: emailError ?? (email == null ? this.emailError : null),
+      password: password ?? this.password,
+      passwordError:
+          passwordError ?? (password == null ? this.passwordError : null),
+      confirmPassword: confirmPassword ?? this.confirmPassword,
+      confirmPasswordError: confirmPasswordError ??
+          (confirmPassword == null ? this.confirmPasswordError : null),
+      countryCode: countryCode ?? this.countryCode,
+      countryCodeError: countryCodeError ??
+          (countryCode == null ? this.countryCodeError : null),
+      pwdVisible: pwdVisible ?? this.pwdVisible,
+      confirmPwdVisible: confirmPwdVisible ?? this.confirmPwdVisible,
+    );
   }
 
   @override
@@ -87,7 +94,9 @@ class RegisterState extends Equatable {
         password,
         phone,
         confirmPassword,
-        countryCode
+        countryCode,
+        confirmPwdVisible,
+        pwdVisible
       ];
 }
 
