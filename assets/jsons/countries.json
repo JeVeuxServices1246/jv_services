@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Canada",
+        "dial_code": "+1",
+        "code": "CA",
+        "flag": "assets/flags/ca.png"
+    },
+    {
+        "name": "India",
+        "dial_code": "+91",
+        "code": "IN",
+        "flag": "assets/flags/in.png"
+    },
+    {
+        "name": "United States",
+        "dial_code": "+1",
+        "code": "US",
+        "flag": "assets/flags/ca.png"
+    }
+]
