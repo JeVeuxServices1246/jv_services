@@ -9,6 +9,7 @@ class RoutingListner extends ChangeNotifier {
     notifyListeners();
     _streamSubscription =
         routingCubit.stream.asBroadcastStream().listen((event) {
+      print("listin");
       notifyListeners();
     });
   }

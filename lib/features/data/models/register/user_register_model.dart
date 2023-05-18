@@ -33,7 +33,7 @@ class UserRegister {
 
   Map<String, String> headers() {
     return <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
+      'Content-Type': 'application/json',
     };
   }
 }

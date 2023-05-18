@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 
 class RegisterOTPScreen extends StatefulWidget {
   const RegisterOTPScreen({super.key});
@@ -20,18 +19,6 @@ class _RegisterOTPScreenState extends State<RegisterOTPScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text("register OTP"),
-            IntlPhoneField(
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(),
-                ),
-              ),
-              initialCountryCode: 'IN',
-              onChanged: (phone) {
-                print(phone.completeNumber);
-              },
-            )
           ],
         ),
       ),

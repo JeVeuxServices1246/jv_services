@@ -16,6 +16,7 @@ import 'package:jv_services/features/domain/usecases/register_form_validation.da
 import 'package:jv_services/features/presentation/common/countries/bloc/countries_list_bloc.dart';
 import 'package:jv_services/features/presentation/onBoarding/cubit/on_board_cubit.dart';
 import 'package:jv_services/features/presentation/register/bloc/register_bloc.dart';
+import 'package:jv_services/features/presentation/register/otp_route/bloc/register_otp_bloc.dart';
 import 'package:jv_services/features/presentation/splash/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,7 @@ Future<void> injectDeps() async {
   gi.registerFactory(() =>
       RegisterBloc(registerDS: gi.call(), registerFormValidation: gi.call()));
   gi.registerFactory(() => CountriesListBloc(countryDS: gi.call()));
+  // gi.registerFactory(() => RegisterOtpBloc(registerDS: gi.call()));
 
   // repository
   gi.registerFactory<OnBoardingPageRepo>(

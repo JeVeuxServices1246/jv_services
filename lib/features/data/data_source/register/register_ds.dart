@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:jv_services/config/base_url_config.dart';
 import 'package:jv_services/core/constants/apis.dart';
 import 'package:http/http.dart' as http;
@@ -22,8 +23,12 @@ class RegisterDSImpl implements RegisterDS {
   @override
   Future<RegisterResourceResp> registerUser(UserRegister register) async {
     try {
+      // print(path.toString());
       final response = await http.post(path,
           headers: register.headers(), body: jsonEncode(register.toJson()));
+      if (kDebugMode) {
+        print(response.body.toString());
+      }
       var body = json.decode(response.body);
       if (response.statusCode == Apis.successCode) {
         return RegisterSuccessResponse.fromJson(body);
@@ -38,7 +43,8 @@ class RegisterDSImpl implements RegisterDS {
           responseCode: Apis.socketException);
     } on FormatException {
       return RegisterException(
-          exception: "Format exception", responseCode: Apis.formatException);
+          exception: "Format exception. Please try again sometimes.",
+          responseCode: Apis.formatException);
     } catch (e) {
       return RegisterException(
           exception: e.toString(), responseCode: Apis.unknowException);

@@ -8,6 +8,8 @@ import 'package:jv_services/features/presentation/splash/cubit/splash_cubit.dart
 import 'features/presentation/onBoarding/cubit/on_board_cubit.dart';
 import 'package:jv_services/features/di/dep_injections.dart' as di;
 
+// import 'features/presentation/register/otp_route/bloc/register_otp_bloc.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.injectDeps();
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.gi.call<RoutingCubit>()),
         BlocProvider(create: (_) => di.gi.call<RegisterBloc>()),
         BlocProvider(create: (_) => di.gi.call<CountriesListBloc>()),
+        // BlocProvider(create: (_) => di.gi.call<RegisterOtpBloc>()),
       ],
       child: MaterialApp.router(
         title: 'Flutter Demo',

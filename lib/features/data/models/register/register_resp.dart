@@ -20,7 +20,7 @@ class RegisterSuccessResponse extends RegisterResourceResp {
   factory RegisterSuccessResponse.fromJson(Map<String, dynamic> json) {
     return RegisterSuccessResponse(
         message: json['message'],
-        mailStatus: json['mail status'],
+        mailStatus: json['mail_status'],
         otp: json['otp'],
         token: json['token'],
         tokenType: json['token_type'],

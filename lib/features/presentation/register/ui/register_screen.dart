@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jv_services/core/colors.dart';
 import 'package:jv_services/core/constants/app_assets.dart';
 import 'package:jv_services/core/constants/strings.dart';
-import 'package:jv_services/features/data/data_source/router/app_route_constants.dart';
+import 'package:jv_services/features/data/models/common/country.dart';
+import 'package:jv_services/features/data/models/common/loading_state.dart';
 import 'package:jv_services/features/presentation/common/countries/countries_widget.dart';
 import 'package:jv_services/features/presentation/register/bloc/register_bloc.dart';
+import 'package:jv_services/features/presentation/register/otp_route/bloc/register_otp_bloc.dart';
+import 'package:jv_services/features/presentation/register/otp_route/register_new_otp_screen.dart';
+import 'package:jv_services/features/di/dep_injections.dart' as di;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -28,210 +33,326 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    print("register dispose");
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          fit: StackFit.loose,
-          children: [
-            Container(
-              height: deviceHeight / 1.5,
-              width: deviceWidth,
-              decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25))),
-            ),
-            Column(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Align(
-                          child: Text(AppStrings.loginTitle,
-                              textAlign: TextAlign.center,
+        body: BlocListener<RegisterBloc, RegisterState>(
+          listener: (_, state) {
+            if (state.loading == LoadingState.show) {
+              showDialog(
+                  context: context,
+                  // routeSettings: const RouteSettings(name: LoadingPopup.router),
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return const Dialog(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      child: SpinKitDoubleBounce(
+                        color: Colors.white,
+                        size: 50.0,
+                      ),
+                    );
+                  });
+              return;
+            } else if (state.loading == LoadingState.hide) {
+              Navigator.pop(context);
+              return;
+            }
+            if (state.registerSuccessResponse != null) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) {
+                  return BlocProvider(
+                    create: (context) =>
+                        RegisterOtpBloc(registerDS: di.gi.call()),
+                    child: RegisterNewOtpScreen(
+                        registerSuccessResponse: state.registerSuccessResponse!,
+                        userRegister: state.userRegister!),
+                  );
+                },
+              ));
+              return;
+              // context.push(AppRouteConstants.registerOTPRouteInfo.fullPath);
+            }
+            if (state.registerException != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.registerException!.exception.toString(),
+                      style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      )),
+                  backgroundColor: Colors.black,
+                ),
+              );
+            }
+          },
+          child: Stack(
+            fit: StackFit.loose,
+            children: [
+              Container(
+                height: deviceHeight / 1.5,
+                width: deviceWidth,
+                decoration: const BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25))),
+              ),
+              Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Align(
+                            child: Text(AppStrings.loginTitle,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.roboto(
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 19,
+                                    color: Colors.white,
+                                  ),
+                                )),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(AppStrings.loginSubtitle,
                               style: GoogleFonts.roboto(
                                 textStyle: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 19,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
                                   color: Colors.white,
                                 ),
                               )),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(AppStrings.loginSubtitle,
-                            style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
-                            )),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 8,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, bottom: 25),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Container(
-                        // height: deviceHeight - 150,
-                        // width: deviceWidth,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(40))),
+                  Expanded(
+                    flex: 8,
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 25),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 30, horizontal: 15),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(AppStrings.signInfo,
-                                          textAlign: TextAlign.start,
-                                          style: GoogleFonts.roboto(
-                                            textStyle: const TextStyle(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 22,
-                                              color: Colors.black,
-                                            ),
-                                          )),
-                                      const SizedBox(
-                                        height: 17,
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Expanded(child: _firstNameBloc()),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Expanded(child: _lastnameBloc())
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      _emailBloc(),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      _phoneBloc(),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      _passwordBloc(),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      _confirmPasswordBloc(),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                InkWell(
-                                  onTap: () => context.pop(),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('have an account?',
-                                          textScaleFactor: 1,
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              color: AppColors.textBlackColor,
-                                              fontWeight: FontWeight.w400)),
-                                      Text(
-                                        'Login',
-                                        style: GoogleFonts.roboto(
-                                            textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: AppColors.blackColor,
-                                        )),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 25),
-                                  child: Text(
-                                      'We will send you a verification \n code to your phone number',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.roboto(
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                          color: Color(0xffB4B4B4),
+                          // height: deviceHeight - 150,
+                          // width: deviceWidth,
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(40))),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 30, horizontal: 15),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(AppStrings.signInfo,
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.roboto(
+                                              textStyle: const TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 22,
+                                                color: Colors.black,
+                                              ),
+                                            )),
+                                        const SizedBox(
+                                          height: 17,
                                         ),
-                                      )),
-                                ),
-                                const SizedBox(
-                                  height: 25,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      BlocProvider.of<RegisterBloc>(context)
-                                          .add(Register());
-                                      // context.push(AppRouteConstants
-                                      //     .registerOTPRouteInfo.fullPath);
-                                    }
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) {
-                                          return const CountriesDialogWidget();
-                                        });
-                                  },
-                                  child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Image.asset(
-                                      AppAssets.nextOnBoarding,
-                                      height: 50,
-                                      width: 50,
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Expanded(child: _firstNameBloc()),
+                                            const SizedBox(
+                                              width: 12,
+                                            ),
+                                            Expanded(child: _lastnameBloc())
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        _emailBloc(),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        _countrySelection(),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        _phoneBloc(),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        _passwordBloc(),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        _confirmPasswordBloc(),
+                                      ],
                                     ),
                                   ),
-                                )
-                              ],
+                                  const SizedBox(height: 20),
+                                  InkWell(
+                                    onTap: () => context.pop(),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text('have an account?',
+                                            textScaleFactor: 1,
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                color: AppColors.textBlackColor,
+                                                fontWeight: FontWeight.w400)),
+                                        Text(
+                                          'Login',
+                                          style: GoogleFonts.roboto(
+                                              textStyle: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: AppColors.blackColor,
+                                          )),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 25),
+                                    child: Text(
+                                        'We will send you a verification \n code to your phone number',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.roboto(
+                                          textStyle: const TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: Color(0xffB4B4B4),
+                                          ),
+                                        )),
+                                  ),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        BlocProvider.of<RegisterBloc>(context)
+                                            .add(Register());
+                                      }
+                                    },
+                                    child: Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Image.asset(
+                                        AppAssets.nextOnBoarding,
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _countrySelection() {
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      builder: (cxt, state) {
+        Country? country = state.selectedCountry;
+        return GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (_) {
+                  return CountriesDialogWidget(selectedCounty: (theCountry) {
+                    BlocProvider.of<RegisterBloc>(context)
+                        .add(CountryCodeChanged(theCountry));
+                  });
+                });
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    country == null
+                        ? const Expanded(flex: 1, child: Icon(Icons.phone))
+                        : Expanded(
+                            flex: 1,
+                            child: Image.asset(
+                              country.flag,
+                              height: 20,
+                              width: 20,
+                            )),
+                    Expanded(
+                        flex: 9,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          child: Text(
+                            country == null
+                                ? "Select Country code"
+                                : "(${country.dailCode}) ${country.name}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(color: Colors.grey),
+                          ),
+                        )),
+                  ],
+                ),
+                Container(
+                  height: 1,
+                  decoration: const BoxDecoration(color: AppColors.greyColor),
                 )
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -311,7 +432,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             BlocProvider.of<RegisterBloc>(context).add(PhoneChanged(value));
           },
           keyboardType: TextInputType.phone,
-          errorMsg: null);
+          errorMsg: null,
+          enabled: state.selectedCountry != null);
     });
   }
 
@@ -383,7 +505,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           keyboardType: TextInputType.visiblePassword,
           pwdVisible: state.confirmPwdVisible,
           visible: () {
-            final isVisible = state.confirmPwdVisible ? false : true;
             BlocProvider.of<RegisterBloc>(context)
                 .add(ConfirmPasswordVisibled(!state.confirmPwdVisible));
           },
@@ -402,10 +523,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       textInputAction: TextInputAction.next,
       String? Function(String?)? validator,
       String? errorMsg,
+      bool enabled = true,
       TextCapitalization textCapitalization = TextCapitalization.none}) {
     return Column(
       children: [
         TextFormField(
+            enabled: enabled,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             autocorrect: false,
             textCapitalization: textCapitalization,

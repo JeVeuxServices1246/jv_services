@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:jv_services/features/data/data_source/common/country_ds.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jv_services/features/data/data_source/register/register_ds.dart';
 import 'package:jv_services/features/data/models/common/country.dart';
+import 'package:jv_services/features/data/models/common/loading_state.dart';
+import 'package:jv_services/features/data/models/register/register_resp.dart';
+import 'package:jv_services/features/data/models/register/user_register_model.dart';
 import 'package:jv_services/features/domain/usecases/register_form_validation.dart';
 
 part 'register_event.dart';
@@ -53,7 +56,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   void _countryCodeEvent(
       CountryCodeChanged event, Emitter<RegisterState> emit) {
-    emit(state.copy(countryCode: event.countryCode));
+    emit(state.copy(selectedCountry: event.countryCode));
   }
 
   void _phoneEvent(PhoneChanged event, Emitter<RegisterState> emit) {
@@ -84,12 +87,36 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(state.copy(confirmPwdVisible: event.visible));
   }
 
-  void _registervent(Register event, Emitter<RegisterState> emit) {
-    print("firstname: ${state.firstname}");
-    print("lastname: ${state.lastname}");
-    print("email: ${state.email}");
-    print("phone: ${state.phone}");
-    print("password: ${state.password}");
+  void _registervent(Register event, Emitter<RegisterState> emit) async {
+    if (kDebugMode) {
+      print("firstname: ${state.firstname}");
+      print("lastname: ${state.lastname}");
+      print("email: ${state.email}");
+      print("phone: ${state.phone}");
+      print("password: ${state.password}");
+      print("County code:${state.selectedCountry!.dailCode}");
+    }
+
+    final UserRegister userRegister = UserRegister(
+        firstname: state.firstname.trim(),
+        roleId: 1,
+        username: state.email.trim(),
+        lastname: state.lastname.trim(),
+        email: state.email.trim(),
+        phone: state.phone.trim(),
+        countryCode: state.selectedCountry!.dailCode,
+        password: state.password);
+    emit(state.copy(loading: LoadingState.show));
+    final RegisterResourceResp response =
+        await registerDS.registerUser(userRegister);
+    emit(state.copy(loading: LoadingState.hide));
+
+    if (response is RegisterSuccessResponse) {
+      emit(state.copy(
+          userRegister: userRegister, registerSuccessResponse: response));
+    } else if (response is RegisterException) {
+      emit(state.copy(registerException: response));
+    }
   }
 
   @override

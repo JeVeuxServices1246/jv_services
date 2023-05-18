@@ -1,6 +1,6 @@
 part of 'register_bloc.dart';
 
-class RegisterState extends Equatable {
+class RegisterState {
   final String firstname;
   final String? firstnameError;
 
@@ -21,8 +21,16 @@ class RegisterState extends Equatable {
   final String? confirmPasswordError;
   final bool confirmPwdVisible;
 
-  final String countryCode;
+  final Country? selectedCountry;
   final String? countryCodeError;
+
+  final UserRegister? userRegister;
+
+  final LoadingState loading;
+
+  final RegisterSuccessResponse? registerSuccessResponse;
+
+  final RegisterException? registerException;
 
   const RegisterState(
       {this.firstname = "",
@@ -31,7 +39,7 @@ class RegisterState extends Equatable {
       this.confirmPassword = "",
       this.password = "",
       this.email = "",
-      this.countryCode = "",
+      this.selectedCountry,
       this.pwdVisible = true,
       this.confirmPwdVisible = true,
       this.firstnameError,
@@ -40,7 +48,11 @@ class RegisterState extends Equatable {
       this.emailError,
       this.passwordError,
       this.countryCodeError,
-      this.confirmPasswordError});
+      this.confirmPasswordError,
+      this.userRegister,
+      this.loading = LoadingState.none,
+      this.registerSuccessResponse,
+      this.registerException});
 
   RegisterState copy({
     List<Country>? countries,
@@ -50,7 +62,7 @@ class RegisterState extends Equatable {
     String? email,
     String? password,
     String? confirmPassword,
-    String? countryCode,
+    Country? selectedCountry,
     bool? pwdVisible,
     bool? confirmPwdVisible,
     String? firstNameError,
@@ -60,44 +72,38 @@ class RegisterState extends Equatable {
     String? passwordError,
     String? confirmPasswordError,
     String? countryCodeError,
+    UserRegister? userRegister,
+    LoadingState? loading,
+    RegisterException? registerException,
+    RegisterSuccessResponse? registerSuccessResponse,
   }) {
     return RegisterState(
-      firstname: firstname ?? this.firstname,
-      firstnameError:
-          firstNameError ?? (firstname == null ? firstnameError : null),
-      lastname: lastname ?? this.lastname,
-      lastnameError:
-          lastnameError ?? (lastname == null ? this.lastnameError : null),
-      phone: phone ?? this.phone,
-      phoneError: phoneError ?? (phone == null ? this.phoneError : null),
-      email: email ?? this.email,
-      emailError: emailError ?? (email == null ? this.emailError : null),
-      password: password ?? this.password,
-      passwordError:
-          passwordError ?? (password == null ? this.passwordError : null),
-      confirmPassword: confirmPassword ?? this.confirmPassword,
-      confirmPasswordError: confirmPasswordError ??
-          (confirmPassword == null ? this.confirmPasswordError : null),
-      countryCode: countryCode ?? this.countryCode,
-      countryCodeError: countryCodeError ??
-          (countryCode == null ? this.countryCodeError : null),
-      pwdVisible: pwdVisible ?? this.pwdVisible,
-      confirmPwdVisible: confirmPwdVisible ?? this.confirmPwdVisible,
-    );
+        firstname: firstname ?? this.firstname,
+        firstnameError:
+            firstNameError ?? (firstname == null ? firstnameError : null),
+        lastname: lastname ?? this.lastname,
+        lastnameError:
+            lastnameError ?? (lastname == null ? this.lastnameError : null),
+        phone: phone ?? this.phone,
+        phoneError: phoneError ?? (phone == null ? this.phoneError : null),
+        email: email ?? this.email,
+        emailError: emailError ?? (email == null ? this.emailError : null),
+        password: password ?? this.password,
+        passwordError:
+            passwordError ?? (password == null ? this.passwordError : null),
+        confirmPassword: confirmPassword ?? this.confirmPassword,
+        confirmPasswordError: confirmPasswordError ??
+            (confirmPassword == null ? this.confirmPasswordError : null),
+        selectedCountry: selectedCountry ?? this.selectedCountry,
+        countryCodeError: countryCodeError ??
+            (selectedCountry == null ? this.countryCodeError : null),
+        pwdVisible: pwdVisible ?? this.pwdVisible,
+        confirmPwdVisible: confirmPwdVisible ?? this.confirmPwdVisible,
+        userRegister: userRegister,
+        loading: loading ?? LoadingState.none,
+        registerSuccessResponse: registerSuccessResponse,
+        registerException: registerException);
   }
-
-  @override
-  List<Object> get props => [
-        lastname,
-        firstname,
-        email,
-        password,
-        phone,
-        confirmPassword,
-        countryCode,
-        confirmPwdVisible,
-        pwdVisible
-      ];
 }
 
 // abstract class RegisterState extends Equatable {

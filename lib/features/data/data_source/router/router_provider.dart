@@ -126,7 +126,7 @@ class GoRouterProvider {
           return AppRouteConstants.welcomeRouteInfo.path;
         }
         if (loggedIn) {
-          if (isSplashPath || isLoginPath) {
+          if (isSplashPath || isLoginPath || isRegisterPath) {
             return AppRouteConstants.dashboardRouteInfo.path;
           }
         }

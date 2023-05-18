@@ -41,7 +41,7 @@ class EmailChanged extends RegisterEvent {
 }
 
 class CountryCodeChanged extends RegisterEvent {
-  final String countryCode;
+  final Country countryCode;
 
   const CountryCodeChanged(this.countryCode);
 
@@ -87,6 +87,14 @@ class PasswordVisibled extends RegisterEvent {
   const PasswordVisibled(this.visible);
   @override
   List<Object> get props => [visible];
+}
+
+class UserRegisterEvent extends RegisterEvent {
+  final UserRegister userRegister;
+
+  const UserRegisterEvent(this.userRegister);
+  @override
+  List<Object> get props => [userRegister];
 }
 
 class ConfirmPasswordVisibled extends RegisterEvent {

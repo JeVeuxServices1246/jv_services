@@ -326,6 +326,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_spinkit",
+      "rootUri": "file:///Users/riyazshaik/.pub-cache/hosted/pub.dev/flutter_spinkit-5.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_svg",
       "rootUri": "file:///Users/riyazshaik/.pub-cache/hosted/pub.dev/flutter_svg-2.0.5",
       "packageUri": "lib/",
@@ -478,12 +484,6 @@
     {
       "name": "http_parser",
       "rootUri": "file:///Users/riyazshaik/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "intl_phone_field",
-      "rootUri": "file:///Users/riyazshaik/.pub-cache/hosted/pub.dev/intl_phone_field-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -926,7 +926,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-05-17T15:15:16.667819Z",
+  "generated": "2023-05-18T10:24:12.742668Z",
   "generator": "pub",
   "generatorVersion": "2.19.6"
 }

@@ -26,7 +26,7 @@ class AppStrings {
 // Login Screen
   static const String loginTitle = "Your Home Services Expert";
   static const String loginSubtitle = "Quick * Affordable * Trusted";
-  static const String PersonalInfo = "Personal Information";
+  static const String personalInfo = "Personal Information";
   static const String enterYourEmail = "Enter Your Email";
   static const String dateOfBrith = "Date Of Birth";
   static const String height = "Height";
